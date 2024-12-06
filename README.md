@@ -1,6 +1,6 @@
 # _chart-releaser_ Action
 
-A GitHub action to turn a GitHub project into a self-hosted Helm chart repo, using [helm/chart-releaser](https://github.com/helm/chart-releaser) CLI tool.
+A GitHub action to turn a GitHub project into a self-hosted Helm chart repo, using [makeplane/helm-chart-releaser](https://github.com/makeplane/helm-chart-releaser) CLI tool.
 
 ## Usage
 
@@ -15,8 +15,8 @@ A GitHub action to turn a GitHub project into a self-hosted Helm chart repo, usi
 
 ### Inputs
 
-- `version`: The chart-releaser version to use (default: v1.6.0)
-- `config`: Optional config file for chart-releaser. For more information on the config file, see the [documentation](https://github.com/helm/chart-releaser#config-file)
+- `version`: The chart-releaser version to use (default: v1.7.0-plane)
+- `config`: Optional config file for chart-releaser. For more information on the config file, see the [documentation](https://github.com/makeplane/helm-chart-releaser#config-file)
 - `charts_dir`: The charts directory
 - `skip_packaging`: This option, when populated, will skip the packaging step. This allows you to do more advanced packaging of your charts (for example, with the `helm package` command) before this action runs. This action will only handle the indexing and publishing steps.
 - `skip_existing`: Skip package upload if release/tag already exists
@@ -35,7 +35,7 @@ A GitHub action to turn a GitHub project into a self-hosted Helm chart repo, usi
 
 - `CR_TOKEN` (required): The GitHub token of this repository (`${{ secrets.GITHUB_TOKEN }}`)
 
-For more information on environment variables, see the [documentation](https://github.com/helm/chart-releaser#environment-variables).
+For more information on environment variables, see the [documentation](https://github.com/makeplane/helm-chart-releaser#environment-variables).
 
 ### Example Workflow
 
@@ -73,12 +73,12 @@ jobs:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
       - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.6.0
+        uses: makeplane/helm-chart-releaser-action@v1.7.0-plane
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 ```
 
-This uses [@helm/chart-releaser-action](https://www.github.com/helm/chart-releaser-action) to turn your GitHub project into a self-hosted Helm chart repo.
+This uses [@makeplane/helm-chart-releaser-action](https://www.github.com/makeplane/helm-chart-releaser-action) to turn your GitHub project into a self-hosted Helm chart repo.
 It does this – during every push to `main` – by checking each chart in your project, and whenever there's a new chart version, creates a corresponding [GitHub release](https://help.github.com/en/github/administering-a-repository/about-releases) named for the chart version, adds Helm chart artifacts to the release, and creates or updates an `index.yaml` file with metadata about those releases, which is then hosted on GitHub Pages. You do not need an `index.yaml` file in `main` at all because it is managed in the `gh-pages` branch.
 
 #### Example using custom config
@@ -87,7 +87,7 @@ It does this – during every push to `main` – by checking each chart in your 
 
 ```yaml
 - name: Run chart-releaser
-  uses: helm/chart-releaser-action@v1.6.0
+  uses: makeplane/helm-chart-releaser-action@v1.7.0-plane
   with:
     charts_dir: charts
     config: cr.yaml
@@ -102,7 +102,7 @@ owner: myaccount
 git-base-url: https://api.github.com/
 ```
 
-For options see [config-file](https://github.com/helm/chart-releaser#config-file).
+For options see [config-file](https://github.com/makeplane/helm-chart-releaser#config-file).
 
 ## Code of conduct
 
