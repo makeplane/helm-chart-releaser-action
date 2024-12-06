@@ -18,7 +18,7 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-DEFAULT_CHART_RELEASER_VERSION=v1.6.1
+DEFAULT_CHART_RELEASER_VERSION=v1.7.0-plane
 
 show_help() {
   cat <<EOF
@@ -38,6 +38,7 @@ Usage: $(basename "$0") <options>
         --skip-upload             Skip package upload, just create the release. Not needed in case of OCI upload.
     -l, --mark-as-latest          Mark the created GitHub release as 'latest' (default: true)
         --packages-with-index     Upload chart packages directly into publishing branch
+        --prerelease              Mark this as 'Pre-release' (default: false)
 EOF
 }
 
@@ -218,6 +219,12 @@ parse_command_line() {
         shift
       fi
       ;;
+    --prerelease)
+      if [[ -n "${2:-}" ]]; then
+        prerelease="$2"
+        shift
+      fi
+      ;;
     *)
       break
       ;;
@@ -261,7 +268,7 @@ install_chart_releaser() {
     mkdir -p "$install_dir"
 
     echo "Installing chart-releaser on $install_dir..."
-    curl -sSLo cr.tar.gz "https://github.com/helm/chart-releaser/releases/download/$version/chart-releaser_${version#v}_linux_amd64.tar.gz"
+    curl -sSLo cr.tar.gz "https://github.com/makeplane/helm-chart-releaser/releases/download/$version/chart-releaser_${version#v}_linux_amd64.tar.gz"
     tar -xzf cr.tar.gz -C "$install_dir"
     rm -f cr.tar.gz
   fi
@@ -330,7 +337,9 @@ release_charts() {
   if [[ -n "$pages_branch" ]]; then
     args+=(--pages-branch "$pages_branch")
   fi
-
+  if [[ "$prerelease" = "true" ]]; then
+    args+=(--prerelease "$prerelease")
+  fi
   echo 'Releasing charts...'
   cr upload "${args[@]}"
 }
