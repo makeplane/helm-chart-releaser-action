@@ -56,6 +56,7 @@ main() {
   local mark_as_latest=true
   local packages_with_index=false
   local pages_branch=
+  local prerelease=false
 
   parse_command_line "$@"
 
@@ -337,7 +338,7 @@ release_charts() {
   if [[ -n "$pages_branch" ]]; then
     args+=(--pages-branch "$pages_branch")
   fi
-  if [[ "$prerelease" = "true" ]]; then
+  if [[ "$prerelease" = true ]]; then
     args+=(--prerelease "$prerelease")
   fi
   echo 'Releasing charts...'
